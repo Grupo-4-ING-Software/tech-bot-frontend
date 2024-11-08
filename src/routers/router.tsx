@@ -1,5 +1,8 @@
 import { createBrowserRouter , RouteObject } from 'react-router-dom';
 import App from '../App';
+import Landing from "../pages/Landing";
+import Login from "../pages/Login";
+import Chat from "../pages/Chat";
 
 const routes: RouteObject[] = [
     {
@@ -8,15 +11,15 @@ const routes: RouteObject[] = [
         children: [
             {
                 path: '/',
-                element: <h1>Landing screen</h1>
+                element: <Landing/>
             },
             {
                 path: '/login',
-                element: <h1>Log In screen</h1>
+                element: <Login/>
             },
             {
                 path: '/c',
-                element: <h1>Chat hub screen</h1>
+                element: <Chat/>
             }
             /*  Se debe implementar el routeo con una base de datos que contenga los chats.
                 Por investigarse.
