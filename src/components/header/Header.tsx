@@ -13,7 +13,6 @@ const Header: React.FC = () => {
     return (
         <header className="max-w-screen-2xl mx-auto px-4 py-6">
             <nav className="flex justify-between items-center">
-                {/* Lado Izquierdo */}
                 <div className="flex items-center md:gap-16 gap-4">
                     <Link to="/">
                         <VscMenu className="size-6" />
@@ -21,7 +20,6 @@ const Header: React.FC = () => {
 
                 </div>
 
-                {/* Lado Derecho */}
                 <div className="relative flex items-center md:space-x-3 space-x-2">
                     <UserPicture/>
 

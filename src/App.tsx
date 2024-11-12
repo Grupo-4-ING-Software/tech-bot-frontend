@@ -1,14 +1,24 @@
-import { Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
+import Landing from "./pages/Landing";
+import Chat from "./pages/Chat";
+import ChatDiagram from "./pages/ChatDiagram";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 const App: React.FC = () => {
     return (
-        <>
-            <main className="min-h-screen max-w-screen-2xl mx-auto px-4 py-6 font-primary">
-                <Outlet />
-            </main>
-            <footer>Footer</footer>
-        </>
+        <Router>
+            <Routes>
+                {/* <Route path="/" element={<Landing />} /> */}
+                <Route path="/" element={<Login/>} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/chat" element={<Chat/>} />
+                <Route path="/chat-diagram" element={<ChatDiagram />} />
+                <Route path="/register" element={<SignUp />} />
+                
+            </Routes>
+        </Router>
     );
 }
 
