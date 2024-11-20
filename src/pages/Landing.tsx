@@ -1,12 +1,12 @@
-import React from 'react'
-import Header from "../components/header/Header"
-import Banner from "../components/header/Header"
+import {FC} from 'react'
+import NavBar from "../components/nav-bar/NavBar"
+import Banner from "../components/banner/Banner"
 
-const Landing: React.FC = () => {
+const Landing: FC = () => {
     return (
         <div>
-            <Header />
-            <Banner/>
+            <NavBar />
+            <Banner />
         </div>
     )
 }

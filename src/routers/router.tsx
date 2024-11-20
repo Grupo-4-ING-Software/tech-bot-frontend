@@ -15,10 +15,11 @@ const routes: RouteObject[] = [
             },
             {
                 path: '/login',
+                
                 element: <Login/>
             },
             {
-                path: '/c',
+                path: '/chat',
                 element: <Chat/>
             }
             /*  Se debe implementar el routeo con una base de datos que contenga los chats.
