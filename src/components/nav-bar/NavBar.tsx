@@ -1,6 +1,5 @@
 import { FC } from 'react'
-import { VscMenu } from "react-icons/vsc";
-
+import { TbBolt } from "react-icons/tb";
 import { HiOutlineHeart } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import UserPicture from '../user-picture/UserPicture';
@@ -13,8 +12,9 @@ const NavBar: FC = () => {
             <nav className="flex justify-between items-center">
                 {/* Lado Izquierdo */}
                 <div className="flex items-center md:gap-16 gap-4">
-                    <Link to="/">
-                        <VscMenu className="size-6" />
+                    <Link to="/" className="flex justify-start">
+                        <TbBolt className="size-6 bg-landing-secondary px-2 py-2 mx-1 rounded-md" />
+                        <h1 className="font-bold">Tech-Bot</h1>
                     </Link>
                 </div>
 

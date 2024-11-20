@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import bannerImg from "../../assets/banner.png"
 import { Link } from 'react-router-dom'
 
 const Banner: FC = () => {
@@ -11,10 +10,7 @@ const Banner: FC = () => {
                 <Link to="/login">
                     <button className="w-full flex flex-wrap gap-1 items-center justify-center bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Pruébalo ahora</button>
                 </Link>
-
             </div>
-
-
         </div>
     )
 }
