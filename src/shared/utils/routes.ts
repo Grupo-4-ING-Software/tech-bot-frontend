@@ -12,6 +12,9 @@ export const ROUTES = {
   },
 } as const;
 
+export const API_ROUTES = {
+  GENERATE_DIAGRAM: '/diagram/generate',
+} as const;
 
 export const getRoute = {
   public: {

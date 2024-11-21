@@ -5,6 +5,7 @@ import CardTextUser from '../components/chat/CardTextUser';
 import TextField from '../components/chat/TextField';
 import CardWithButton from '../components/chat/CardWithButton';
 import { ROUTES } from '../shared/utils/routes';
+import { useDiagram } from '../context/DiagramContext';
 
 interface Message {
   sender: 'bot' | 'user';
@@ -23,26 +24,37 @@ const Chat: FC = () => {
 
   const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { generateDiagram } = useDiagram();
 
-  const handleSend = (message: string) => {
-    setMessages((prevMessages) => [...prevMessages, { sender: 'user', text: message, type: 'text' }]);
+  const handleSend = async (message: string) => {
+    setMessages(prev => [...prev, { sender: 'user', text: message, type: 'text' }]);
 
-    // Simulación de respuestas del bot
-    setTimeout(() => {
-      // Primer mensaje del bot en respuesta al usuario
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: 'bot', text: '¡Entendido! Te comparto información sobre desarrollo web.', type: 'text' },
+    try {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'bot', text: '¡Entendido! Generando diagrama...', type: 'text' },
       ]);
 
-      // Segundo mensaje del bot que incluye el botón
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: 'bot', text: 'Claro! 😊 Presiona el siguiente botón 👇 y encontrarás todos los pasos para convertirte en un ingeniero de software 🖥️. ¡Vamos a por ello! 🚀', type: 'button' },
-        ]);
-      }, 1000);
-    }, 1000);
+      await generateDiagram(message);
+
+      setMessages(prev => [
+        ...prev,
+        {
+          sender: 'bot',
+          text: 'Claro! 😊 Presiona el siguiente botón 👇 y encontrarás todos los pasos para tu ruta de aprendizaje 🖥️. ¡Vamos a por ello! 🚀',
+          type: 'button',
+        },
+      ]);
+    } catch {
+      setMessages(prev => [
+        ...prev,
+        {
+          sender: 'bot',
+          text: 'Lo siento, hubo un error generando el diagrama. Por favor, intenta de nuevo.',
+          type: 'text',
+        },
+      ]);
+    }
   };
 
   const handleDiagramClick = () => {
