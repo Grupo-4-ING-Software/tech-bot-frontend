@@ -1,14 +1,15 @@
 import { FC, useState, useRef, useEffect } from 'react';
-import Sidebar from '../layout/sidebar/Sidebar';
+import { useNavigate } from 'react-router-dom';
 import CardTextChatbot from '../components/chat/CardTextChatbot';
 import CardTextUser from '../components/chat/CardTextUser';
 import TextField from '../components/chat/TextField';
 import CardWithButton from '../components/chat/CardWithButton';
+import { ROUTES } from '../shared/utils/routes';
 
 interface Message {
   sender: 'bot' | 'user';
   text: string;
-  type?: 'text' | 'button'; // Añadir tipo para diferenciar entre mensajes de texto y con botón
+  type?: 'text' | 'button';
 }
 
 const Chat: FC = () => {
@@ -20,6 +21,7 @@ const Chat: FC = () => {
     },
   ]);
 
+  const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const handleSend = (message: string) => {
@@ -43,6 +45,10 @@ const Chat: FC = () => {
     }, 1000);
   };
 
+  const handleDiagramClick = () => {
+    navigate(ROUTES.APP.DIAGRAM);
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -52,44 +58,42 @@ const Chat: FC = () => {
   }, [messages]);
 
   return (
-    <div className="flex flex-row h-screen">
-      <Sidebar />
-      <div className="flex flex-col w-full p-8 justify-center items-center gap-3">
-        <div className="flex flex-col w-3/4 gap-3 justify-between h-full">
-          <div className="flex justify-center items-center">
-            <h1 className="text-3xl font-semibold bg-gradient-to-r from-lavanda to-pink text-transparent bg-clip-text">
-              ¿Qué nueva ruta quieres aprender, Melissa?
-            </h1>
-          </div>
-   
-          <article className="flex flex-col bg-gray-ligth w-full h-3/4 rounded-3xl p-5 gap-4 overflow-y-auto">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.sender === 'bot' ? 'justify-start' : 'justify-end'}`}
-              >
-                {message.sender === 'bot' && message.type === 'text' ? (
-                  <CardTextChatbot text={message.text} />
-                ) : message.sender === 'bot' && message.type === 'button' ? (
-                  <CardWithButton 
-                    text={message.text} 
-                    buttonText="¡Click aquí!" 
-                    buttonRoute="/chat-diagram"
-                  />
-                ) : (
-                  <CardTextUser text={message.text} />
-                )}
-              </div>
-            ))}
-
-            <div ref={messagesEndRef} />
-          </article>
-          
-          <TextField
-            placeholder="Escribe tu mensaje..."
-            onSend={handleSend} 
-          />
+    <div className="flex flex-col w-full p-8 justify-center items-center gap-3">
+      <div className="flex flex-col w-3/4 gap-3 justify-between h-full">
+        <div className="flex justify-center items-center">
+          <h1 className="text-3xl font-semibold bg-gradient-to-r from-lavanda to-pink text-transparent bg-clip-text">
+            ¿Qué nueva ruta quieres aprender, Melissa?
+          </h1>
         </div>
+   
+        <article className="flex flex-col bg-gray-ligth w-full h-3/4 rounded-3xl p-5 gap-4 overflow-y-auto">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${message.sender === 'bot' ? 'justify-start' : 'justify-end'}`}
+            >
+              {message.sender === 'bot' && message.type === 'text' ? (
+                <CardTextChatbot text={message.text} />
+              ) : message.sender === 'bot' && message.type === 'button' ? (
+                <CardWithButton 
+                  text={message.text} 
+                  buttonText="¡Click aquí!" 
+                  buttonRoute={ROUTES.APP.DIAGRAM}
+                  onButtonClick={handleDiagramClick}
+                />
+              ) : (
+                <CardTextUser text={message.text} />
+              )}
+            </div>
+          ))}
+
+          <div ref={messagesEndRef} />
+        </article>
+        
+        <TextField
+          placeholder="Escribe tu mensaje..."
+          onSend={handleSend} 
+        />
       </div>
     </div>
   );

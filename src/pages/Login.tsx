@@ -1,92 +1,105 @@
 import { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import InputLogin from '../components/login/InputLogin';
 import ButtonLogin from '../components/login/ButtonLogin';
 import { FiArrowLeft } from 'react-icons/fi';
+import { ROUTES } from '../shared/utils/routes';
 
-const LoginForm: FC= () => {
+const LoginForm: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Iniciando sesión con email:', email, 'y contraseña:', password);
+    navigate(ROUTES.APP.CHAT);
   };
 
   return (
     <div className="flex flex-row h-screen">
       <div className="flex-col w-1/2 bg-white flex items-center justify-center">
         <div className="self-start ml-8 mb-4">
-          <Link to="/">
-            <FiArrowLeft className="text-blue-500 text-2xl cursor-pointer" />
+          <Link to={ROUTES.LANDING}>
+            <FiArrowLeft className="text-blue-500 text-3xl cursor-pointer" />
           </Link>
         </div>
-        <article className="max-w-md w-1/2">
-          <div className="flex flex-col mb-8 text-left gap-7">
-            <h1 className="text-3xl font-bold">Bienvenido de nuevo  👋</h1>
-            <p className="text-gray-500 text-sm">Hoy es un nuevo día. Inicia sesión para empezar a aprender y alcanzar tus metas. 🚀</p>
+        <article className="max-w-md w-3/4">
+          <div className="flex flex-col mb-10 text-left gap-7">
+            <h1 className="text-4xl font-bold leading-tight">
+              Bienvenido de nuevo  👋
+            </h1>
+            <p className="text-gray-500 text-base leading-relaxed">
+              Hoy es un nuevo día. Inicia sesión para empezar a aprender y alcanzar tus metas. 🚀
+            </p>
           </div>
-          <form onSubmit={handleLogin} className="space-y-4">
-          <InputLogin
-            title="Correo electrónico"
-            placeholder="example@email.com"
-            type="email"
-            value={email}
-            onChange={setEmail}
+          <form onSubmit={handleLogin} className="space-y-6">
+            <InputLogin
+              title="Correo electrónico"
+              placeholder="example@email.com"
+              type="email"
+              value={email}
+              onChange={setEmail}
             />
 
             <InputLogin
-                title="Contraseña"
-                placeholder="At least 8 characters"
-                type="password"
-                value={password}
-                onChange={setPassword}
+              title="Contraseña"
+              placeholder="At least 8 characters"
+              type="password"
+              value={password}
+              onChange={setPassword}
             />
+            
             <div className='flex justify-end items-center'>
-                <a href="#" className="text-blue text-xs">
-                    ¿Olvidaste tu contraseña?
-                </a>
+              <a href="#" className="text-blue text-sm hover:text-blue-600 transition-colors">
+                ¿Olvidaste tu contraseña?
+              </a>
             </div>
-            <Link to="/chat">
-                <ButtonLogin text="Iniciar sesión" bgColor="bg-black" textColor="text-white" />
-            </Link>
+            
+            <ButtonLogin 
+              text="Iniciar sesión" 
+              bgColor="bg-black" 
+              textColor="text-white"
+              className="text-base py-3"
+              onClick={() => handleLogin(new Event('click') as unknown as React.FormEvent)}
+            />
           </form>
-          <div className="mt-6 space-y-4">
-            <div className="flex items-center justify-center space-x-2">
-              <hr className="w-1/4 border-gray-300" />
-              <span className="text-gray-500">O</span>
-              <hr className="w-1/4 border-gray-300" />
+          <div className="mt-8 space-y-6">
+            <div className="flex items-center justify-center space-x-3">
+              <hr className="w-1/3 border-gray-300" />
+              <span className="text-gray-500 text-base">O</span>
+              <hr className="w-1/3 border-gray-300" />
             </div>
 
-            <ButtonLogin
-              text="Sign in with Google"
-              onClick={() => console.log('Iniciar sesión con Google')}
-              bgColor="bg-background-input-login"
-              textColor="text-gray-700"
-              borderColor="none"
-              iconSrc="/public/assets/icons/google-color-svgrepo-com.svg"
-              iconAlt="Google Logo"
-            />
+            <Link to="/app">
+              <ButtonLogin
+                text="Sign in with Google"
+                onClick={() => console.log('Iniciar sesión con Google')}
+                bgColor="bg-background-input-login"
+                textColor="text-gray-700"
+                borderColor="none"
+                className="text-base py-3"
+                iconSrc="/assets/icons/google-color-svgrepo-com.svg"
+                iconAlt="Google Logo"
+              />
+            </Link>
           </div>
-          <div className="text-center mt-4 text-sm">
-            <p>
+          <div className="text-center mt-6">
+            <p className="text-base">
               ¿No tienes una cuenta?{' '}
-              <Link to="/register" className="text-blue-500 text-blue">
+              <Link to={ROUTES.REGISTER} className="text-blue font-medium hover:text-blue-600 transition-colors">
                 Regístrate
               </Link>
             </p>
           </div>
-          
         </article>
       </div>
       <div className="w-1/2 bg-white flex items-center justify-center">
         <img 
-            src="/public/assets/images/techbot-login.webp" 
-            alt="Chat Illustration" 
-            className="w-auto h-5/6" 
-            />
+          src="/assets/images/techbot-login.webp" 
+          alt="Chat Illustration" 
+          className="w-auto h-5/6" 
+        />
       </div>
-
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { VscMenu } from "react-icons/vsc";
 
 import { HiOutlineHeart } from "react-icons/hi";
@@ -8,7 +8,7 @@ import { HiOutlineShoppingCart } from 'react-icons/hi2';
 import UserPicture from '../user-picture/UserPicture';
 
 
-const Header: React.FC = () => {
+const Header: FC = () => {
     
     return (
         <header className="max-w-screen-2xl mx-auto px-4 py-6">
