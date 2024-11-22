@@ -14,7 +14,7 @@ const NavBar: FC = () => {
                 {/* Lado Izquierdo */}
                 <div className="flex items-center md:gap-16 gap-4 text-3xl">
                     <Link to="/" className="flex justify-start">
-                        <img src={logo}/>
+                        <img src={logo} />
                     </Link>
                 </div>
 
@@ -34,10 +34,10 @@ const NavBar: FC = () => {
                             <>
                                 {/* Centro */}
                                 <div className="flex items-center md:gap-16 gap-4 bg-gray-200 px-8 py-4 mx-1 rounded-2xl text-gray-400 font-semibold">
-                                    <Link to="/" className="hover:text-black">Inicio</Link>
-                                    <Link to="/about-us" className="hover:text-black">Nosotros</Link>
-                                    <Link to="/how-it-works" className="hover:text-black">Cómo funciona</Link>
-                                    <Link to="/services" className="hover:text-black">Servicios</Link>
+                                    <a href="#home" className="hover:text-black">Inicio</a>
+                                    <a href="#about-us" className="hover:text-black">Nosotros</a>
+                                    <a href="#how-it-works" className="hover:text-black">Cómo funciona</a>
+                                    <a href="#services" className="hover:text-black">Servicios</a>
                                 </div>
                                 {/* Lado Derecho */}
                                 <div className="relative flex items-center md:space-x-3 space-x-2">

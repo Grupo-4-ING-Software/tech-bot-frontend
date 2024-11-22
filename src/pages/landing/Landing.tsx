@@ -1,15 +1,16 @@
 import {FC} from 'react'
 import NavBar from "../../components/nav-bar/NavBar"
-import Banner from "../../components/banner/Banner"
+import Banner from "./banner/Banner"
 import Footer from '../../components/footer/Footer'
-import Features from './features/Features'
+import Sections from './section/Sections'
 
 const Landing: FC = () => {
     return (
-        <div className="bg-landing-primary text-landing-secondary">
+        <div className="bg-landing-image bg-landing-primary bg-top bg-no-repeat text-landing-secondary font-landing">
             <NavBar />
             <Banner />
-            <Features />
+            <Sections />
+            
             <Footer />
             
         </div>
