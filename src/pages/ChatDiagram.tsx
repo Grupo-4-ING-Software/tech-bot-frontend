@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { FC, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../shared/utils/routes';
 import { useDiagram } from '../context/DiagramContext';
 
@@ -68,8 +68,16 @@ const DiagramNode: FC<{ node: DiagramNode; level?: number }> = ({ node, level = 
 
 const ChatDiagram: FC = () => {
   const { diagram } = useDiagram();
+  const navigate = useNavigate();
 
-  if (!diagram) {
+  useEffect(() => {
+    // Si es un diagrama de error o no hay diagrama, redirigir al chat
+    if (!diagram || diagram.id === 'error') {
+      navigate(ROUTES.APP.CHAT);
+    }
+  }, [diagram, navigate]);
+
+  if (!diagram || diagram.id === 'error') {
     return (
       <div className="min-h-screen bg-gray-ligth p-8 flex items-center justify-center">
         <p>No hay diagrama disponible. Por favor, genera uno desde el chat.</p>

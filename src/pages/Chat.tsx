@@ -13,52 +13,85 @@ interface Message {
   type?: 'text' | 'button';
 }
 
+const WELCOME_MESSAGE = '¡Hola! 👋 ¡Bienvenido a TechBoth! 🚀 Aquí te ayudaremos a descubrir el mejor camino para tu carrera profesional 💼 brindándote los recursos más valiosos 📚. Cuéntame, ¿qué línea de carrera te gustaría explorar hoy? 🎯';
+
 const Chat: FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'bot',
-      text: '¡Hola! 👋 ¡Bienvenido a TechBoth! 🚀 Aquí te ayudaremos a descubrir el mejor camino para tu carrera profesional 💼 brindándote los recursos más valiosos 📚. Cuéntame, ¿qué línea de carrera te gustaría explorar hoy? 🎯',
+      text: WELCOME_MESSAGE,
       type: 'text'
     },
   ]);
 
   const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const { generateDiagram } = useDiagram();
+  const { generateDiagram, diagram} = useDiagram();
 
   const handleSend = async (message: string) => {
+    // Agregar mensaje del usuario
     setMessages(prev => [...prev, { sender: 'user', text: message, type: 'text' }]);
 
     try {
+      // Mensaje de "pensando"
       setMessages(prev => [
         ...prev,
-        { sender: 'bot', text: '¡Entendido! Generando diagrama...', type: 'text' },
+        { sender: 'bot', text: '🤔 Déjame analizar tu solicitud...', type: 'text' },
       ]);
 
+      // Generar diagrama y esperar la respuesta
       await generateDiagram(message);
 
-      setMessages(prev => [
-        ...prev,
-        {
-          sender: 'bot',
-          text: 'Claro! 😊 Presiona el siguiente botón 👇 y encontrarás todos los pasos para tu ruta de aprendizaje 🖥️. ¡Vamos a por ello! 🚀',
-          type: 'button',
-        },
-      ]);
+      // Remover mensaje de "pensando"
+      setMessages(prev => {
+        const updatedMessages = prev.slice(0, -1);
+
+        if (diagram?.id === 'error') {
+          // Si es un error, mostrar mensaje amigable y reiniciar la conversación
+          return [
+            ...updatedMessages,
+            {
+              sender: 'bot',
+              text: '¡Hey! 👋 Me especializo en ayudarte a encontrar el camino en carreras tecnológicas. ¿Podrías intentar con alguna de estas opciones?\n\n• Desarrollador Frontend\n• Desarrollador Backend\n• Ingeniero DevOps\n• Científico de Datos\n• Arquitecto Cloud\n• Ingeniero de Software\n\n¡Intentémoslo de nuevo! 😊',
+              type: 'text',
+            },
+            {
+              sender: 'bot',
+              text: WELCOME_MESSAGE,
+              type: 'text',
+            },
+          ];
+        } else {
+          // Si es exitoso, mostrar mensaje con botón
+          return [
+            ...updatedMessages,
+            {
+              sender: 'bot',
+              text: '¡Excelente elección! 🎯 He preparado una ruta de aprendizaje personalizada para ti. Presiona el botón para ver tu diagrama detallado. ¡Comencemos esta emocionante aventura! 🚀',
+              type: 'button',
+            },
+          ];
+        }
+      });
     } catch {
-      setMessages(prev => [
-        ...prev,
-        {
-          sender: 'bot',
-          text: 'Lo siento, hubo un error generando el diagrama. Por favor, intenta de nuevo.',
-          type: 'text',
-        },
-      ]);
+      setMessages(prev => {
+        const updatedMessages = prev.slice(0, -1);
+        return [
+          ...updatedMessages,
+          {
+            sender: 'bot',
+            text: 'Ups, parece que hubo un pequeño problema técnico 😅. ¿Podrías intentarlo de nuevo?',
+            type: 'text',
+          },
+        ];
+      });
     }
   };
 
   const handleDiagramClick = () => {
-    navigate(ROUTES.APP.DIAGRAM);
+    if (diagram && diagram.id !== 'error') {
+      navigate(ROUTES.APP.DIAGRAM);
+    }
   };
 
   const scrollToBottom = () => {
@@ -89,7 +122,7 @@ const Chat: FC = () => {
               ) : message.sender === 'bot' && message.type === 'button' ? (
                 <CardWithButton 
                   text={message.text} 
-                  buttonText="¡Click aquí!" 
+                  buttonText="¡Ver mi ruta! 🗺️" 
                   buttonRoute={ROUTES.APP.DIAGRAM}
                   onButtonClick={handleDiagramClick}
                 />

@@ -27,6 +27,14 @@ function diagramReducer(state: DiagramState, action: DiagramAction): DiagramStat
     case 'SET_LOADING':
       return { ...state, isLoading: true, error: null };
     case 'SET_DIAGRAM':
+      if (action.payload.id === 'error') {
+        return {
+          ...state,
+          diagram: action.payload,
+          isLoading: false,
+          error: null
+        };
+      }
       return { ...state, diagram: action.payload, isLoading: false };
     case 'SET_ERROR':
       return { ...state, error: action.payload, isLoading: false };

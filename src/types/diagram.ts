@@ -19,4 +19,15 @@ export interface DiagramResponse {
 
 export interface DiagramRequest {
   prompt: string;
+}
+
+export interface ErrorDiagram extends DiagramNode {
+  id: 'error';
+  description: string;
+  resources: [];
+  children: [];
+}
+
+export function isErrorDiagram(diagram: DiagramNode): diagram is ErrorDiagram {
+  return diagram.id === 'error';
 } 
