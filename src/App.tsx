@@ -1,26 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import "./App.css";
-
-import Landing from "./pages/landing/Landing"
-import Chat from "./pages/Chat";
-import ChatDiagram from "./pages/ChatDiagram";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+import router from "./routers/router";
+import { DiagramProvider } from './context/DiagramContext';
 
 const App: React.FC = () => {
-    return (
-        <Router>
-            <Routes>
-                {/* <Route path="/" element={<Landing />} /> */}
-                <Route path="/" element={<Landing/>} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/chat" element={<Chat/>} />
-                <Route path="/chat-diagram" element={<ChatDiagram />} />
-                <Route path="/register" element={<SignUp />} />
-                
-            </Routes>
-        </Router>
-    );
+    return <DiagramProvider>
+        <RouterProvider router={router} />
+    </DiagramProvider>;
 }
 
 export default App;
