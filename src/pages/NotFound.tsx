@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../shared/utils/routes';
+import logo from '../assets/icons/logo.svg'
 
 const NotFound: FC = () => {
     return (
         <div className="min-h-screen flex items-center justify-center relative">
-            <div 
+            <div
                 className="absolute inset-0 z-0"
                 style={{
                     backgroundImage: 'url(/assets/images/background.png)',
@@ -20,11 +21,9 @@ const NotFound: FC = () => {
                 <div className="space-y-6 max-w-lg mx-auto">
                     {/* Logo */}
                     <div className="flex justify-center mb-8">
-                        <div className="bg-black p-3 rounded-lg">
-                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
-                        </div>
+                        <Link to={ROUTES.LANDING}>
+                            <img src={logo} className="hover:shadow-sm"/>
+                        </Link>
                     </div>
 
                     {/* Error Number */}

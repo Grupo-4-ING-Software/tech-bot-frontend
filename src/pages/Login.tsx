@@ -4,6 +4,8 @@ import InputLogin from '../components/login/InputLogin';
 import ButtonLogin from '../components/login/ButtonLogin';
 import { FiArrowLeft } from 'react-icons/fi';
 import { ROUTES } from '../shared/utils/routes';
+import useSmallScreenSize from '../hooks/small-screen-size/useSmallScreenSize'
+import logo from '../assets/icons/logo.svg'
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState('');
@@ -15,17 +17,28 @@ const LoginForm: FC = () => {
     navigate(ROUTES.APP.CHAT);
   };
 
+  const isSmallScreen = useSmallScreenSize();
+
   return (
-    <div className="flex flex-row h-screen">
-      <div className="flex-col w-1/2 bg-white flex items-center justify-center">
-        <div className="self-start ml-8 mb-4">
+    <div className="flex flex-row h-screen overflow-hidden">
+      {/* User Login */}
+      <div className="flex-col w-full md:w-1/2 flex items-center justify-center m-16 mt-0 -translate-y-9 md:translate-y-0" >
+        <div className="h-6 -translate-y-6 md:-translate-y-2 ">
+          <Link to={ROUTES.LANDING}>
+          <img src={logo} alt="Logo de TechBot" />
+          </Link>
+        </div>
+        {/* Go Back Button */}
+        <div className="self-start ml-8 translate-y-12 border rounded-full bg-white p-2 shadow-md hover:bg-gray-50 -translate-x-10 md:translate-x-0">
           <Link to={ROUTES.LANDING}>
             <FiArrowLeft className="text-blue-500 text-3xl cursor-pointer" />
           </Link>
         </div>
+
+        {/* User Login Data */}
         <article className="max-w-md w-3/4">
           <div className="flex flex-col mb-10 text-left gap-7">
-            <h1 className="text-4xl font-bold leading-tight">
+            <h1 className="text-4xl font-bold leading-tight w-screen">
               Bienvenido de nuevo  👋
             </h1>
             <p className="text-gray-500 text-base leading-relaxed">
@@ -48,23 +61,28 @@ const LoginForm: FC = () => {
               value={password}
               onChange={setPassword}
             />
-            
-            <div className='flex justify-end items-center'>
-              <a href="#" className="text-blue text-sm hover:text-blue-600 transition-colors">
-                ¿Olvidaste tu contraseña?
-              </a>
+
+
+            <div className="flex items-center space-x-1">
+              <div className='flex-shrink-0 mb-[2px]'>
+                <a href="#" className="text-landing-secondary text-xs hover:text-gray-600 transition-colors px-4 md:px-12 py-3 rounded-xl border bg-gray-50 hover:bg-gray-200">
+
+                  ¿Olvidaste tu contraseña?
+
+                </a>
+              </div>
+              <ButtonLogin
+                text="Iniciar sesión"
+                bgColor="bg-black"
+                textColor="text-white"
+                className="text-base py-3"
+                onClick={() => handleLogin(new Event('click') as unknown as React.FormEvent)}
+              />
             </div>
-            
-            <ButtonLogin 
-              text="Iniciar sesión" 
-              bgColor="bg-black" 
-              textColor="text-white"
-              className="text-base py-3"
-              onClick={() => handleLogin(new Event('click') as unknown as React.FormEvent)}
-            />
+
           </form>
-          <div className="mt-8 space-y-6">
-            <div className="flex items-center justify-center space-x-3">
+          <div className="mt-4 space-y-6">
+            <div className="flex items-center justify-center space-x-3 mb-4">
               <hr className="w-1/3 border-gray-300" />
               <span className="text-gray-500 text-base">O</span>
               <hr className="w-1/3 border-gray-300" />
@@ -93,13 +111,18 @@ const LoginForm: FC = () => {
           </div>
         </article>
       </div>
-      <div className="w-1/2 bg-white flex items-center justify-center">
-        <img 
-          src="/assets/images/techbot-login.webp" 
-          alt="Chat Illustration" 
-          className="w-auto h-5/6" 
-        />
-      </div>
+
+      {/* Login Image */}
+      {!isSmallScreen && (
+        <div className="w-1/2 bg-white flex items-center justify-center">
+          <img
+            src="/assets/images/techbot-login.webp"
+            alt="Chat Illustration"
+            className="w-auto h-5/6"
+          />
+        </div>
+      )}
+
     </div>
   );
 };

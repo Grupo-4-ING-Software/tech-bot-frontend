@@ -29,7 +29,7 @@ const Footer: FC = () => {
                             placeholder="Ingresa tu email"
                             className="w-full px-4 py-2 rounded-l-md text-black"
                         />
-                        <button className="bg-primary px-6 py-2 rounded-r-md hover:bg-primary-dark">
+                        <button className="bg-blue px-6 py-2 rounded-r-md hover:bg-opacity-90">
                             Suscribirse
                         </button>
                     </div>
