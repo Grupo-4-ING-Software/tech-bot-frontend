@@ -19,7 +19,7 @@ const InputLogin: FC<InputLoginProps> = ({
 }) => {
   return (
     <div className={`mb-4 ${className}`}>
-      <label htmlFor={title.toLowerCase()} className="block text-gray-700 font-medium mb-1 text-xs">
+      <label htmlFor={title.toLowerCase()} className="block text-gray-700 font-semibold  mb-1 text-s">
         {title}
       </label>
       <input

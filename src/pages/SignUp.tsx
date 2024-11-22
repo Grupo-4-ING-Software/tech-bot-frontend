@@ -18,7 +18,7 @@ const SignUp: FC = () => {
   return (
     <div className="flex flex-row h-screen">
       <div className="flex-col w-1/2 bg-white flex items-center justify-center">
-        <div className="self-start ml-8 mb-4">
+        <div className="self-start ml-8 translate-y-12 border rounded-full bg-white p-2 shadow-md hover:bg-gray-50 -translate-x-10 md:translate-x-0">
           <Link to={ROUTES.LANDING}>
             <FiArrowLeft className="text-blue-500 text-3xl cursor-pointer" />
           </Link>
