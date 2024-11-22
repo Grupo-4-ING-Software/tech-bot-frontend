@@ -26,14 +26,14 @@ const Chat: FC = () => {
 
   const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const { generateDiagram, diagram} = useDiagram();
+  const { generateDiagram, diagram } = useDiagram();
 
   const handleSend = async (message: string) => {
-    
+    // Agregar mensaje del usuario
     setMessages(prev => [...prev, { sender: 'user', text: message, type: 'text' }]);
 
     try {
-   
+      // Mensaje de "pensando"
       setMessages(prev => [
         ...prev,
         { sender: 'bot', text: '🤔 Déjame analizar tu solicitud...', type: 'text' },

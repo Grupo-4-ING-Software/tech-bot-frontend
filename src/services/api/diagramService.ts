@@ -1,8 +1,9 @@
 import { DiagramRequest, DiagramResponse } from '../../types/diagram';
+import { API_ROUTES } from '../../shared/utils/routes';
 
 export class DiagramService {
   private static instance: DiagramService;
-  private baseUrl: string = import.meta.env.VITE_API_URL;
+  private baseUrl: string = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
   private constructor() {}
 
@@ -16,7 +17,7 @@ export class DiagramService {
   async generateDiagram(prompt: string): Promise<DiagramResponse> {
     try {
       const request: DiagramRequest = { prompt };
-      const response = await fetch(`${this.baseUrl}`, {
+      const response = await fetch(`${this.baseUrl}${API_ROUTES.GENERATE_DIAGRAM}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
