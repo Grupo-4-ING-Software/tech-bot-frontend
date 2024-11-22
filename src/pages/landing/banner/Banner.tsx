@@ -1,16 +1,26 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
+import { ROUTES } from '../../../shared/utils/routes'
 
 const Banner: FC = () => {
     return (
-        <div className="flex flex-col items-center justify-center h-screen text-center">
-            <h1 className="text-7xl w-auto md:text-6xl font-bold mb-7 pb-6 max-w-2xl -translate-y-10">
+        <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 max-w-4xl mx-auto 
+                         bg-gradient-to-r from-black to-black bg-clip-text text-transparent
+                         animate-fade-in">
                 La mejor orientación automatizada para ti
             </h1>
-            <Link to="/login">
-                <button className="bg-black hover:bg-blue-700 text-white font-bold py-4 px-10 rounded focus:outline-none">
-                    Pruébalo ahora
-                </button>
+            <p className="text-xl md:text-2xl mb-10 max-w-2xl text-gray-600 animate-fade-in-delay">
+                Descubre el camino perfecto para tu carrera en tecnología con ayuda de la IA
+            </p>
+            <Link 
+                to={ROUTES.LOGIN}
+                className="bg-black text-white font-bold py-4 px-10 rounded-xl
+                         hover:bg-opacity-90 transition-all duration-300 transform
+                         hover:scale-105 animate-fade-in-delay-2
+                         shadow-lg hover:shadow-xl"
+            >
+                Pruébalo ahora
             </Link>
         </div>
     );

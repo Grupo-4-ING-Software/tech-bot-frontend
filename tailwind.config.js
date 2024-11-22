@@ -32,6 +32,17 @@ module.exports = {
         'medium': 500,
         'bold': 700,
       },
+      animation: {
+        'fade-in': 'fadeIn 1s ease-in',
+        'fade-in-delay': 'fadeIn 1s ease-in 0.5s forwards',
+        'fade-in-delay-2': 'fadeIn 1s ease-in 1s forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
     },
   },
   plugins: [],

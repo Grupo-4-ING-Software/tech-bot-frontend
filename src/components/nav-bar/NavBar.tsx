@@ -1,52 +1,143 @@
-import { FC } from 'react'
+import { FC, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '../../shared/utils/routes';
 import useSmallScreenSize from '../../hooks/small-screen-size/useSmallScreenSize';
+import logo from '../../assets/icons/logo.svg';
 
-import logo from '../../assets/icons/logo.svg'
-
+const NAV_ITEMS = [
+    { label: 'Inicio', href: '#home' },
+    { label: 'Nosotros', href: '#about-us' },
+    { label: 'Cómo funciona', href: '#how-it-works' },
+    { label: 'Servicios', href: '#services' },
+];
 
 const NavBar: FC = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const isSmallScreen = useSmallScreenSize();
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <header className="max-w-screen-2xl mx-auto px-4 py-6">
-            <nav className="flex flex-wrap justify-between items-center">
-                {/* Lado Izquierdo */}
-                <div className="flex items-center md:gap-16 gap-4 text-3xl">
-                    <Link to="/" className="flex justify-start">
-                        <img src={logo} />
-                    </Link>
+        <header className={`fixed w-full z-50 transition-all duration-300 ${
+            isScrolled ? 'bg-white/80 backdrop-blur-sm shadow-md' : ''
+        }`}>
+            <nav className="max-w-screen-2xl mx-auto px-6 py-4">
+                <div className="flex justify-center items-center relative">
+                    {/* Logo (Left) */}
+                    <div className="absolute left-0">
+                        <Link to={ROUTES.LANDING} className="flex items-center gap-2">
+                            <div className="bg-black p-2 rounded">
+                                <img src={logo} alt="TechBot Logo" className="h-6 w-6" />
+                            </div>
+                            <span className="text-xl font-bold">TechBot</span>
+                        </Link>
+                    </div>
+
+                    {/* Desktop Navigation (Center) */}
+                    {!isSmallScreen && (
+                        <div className="flex items-center">
+                            {/* Navigation Links in White Container */}
+                            <div className="bg-white px-8 py-3 rounded-2xl flex items-center gap-8">
+                                {NAV_ITEMS.map((item) => (
+                                    <a
+                                        key={item.label}
+                                        href={item.href}
+                                        className="text-gray-500 hover:text-black transition-colors"
+                                    >
+                                        {item.label}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Auth Buttons (Right) */}
+                    {!isSmallScreen && (
+                        <div className="absolute right-0 flex items-center gap-4">
+                            <Link 
+                                to={ROUTES.REGISTER}
+                                className="text-gray-400 hover:text-black transition-colors"
+                            >
+                                Regístrate
+                            </Link>
+                            <Link 
+                                to={ROUTES.LOGIN}
+                                className="bg-blue text-white px-6 py-2 rounded-lg
+                                         hover:bg-opacity-90 transition-all duration-300"
+                            >
+                                Iniciar sesión
+                            </Link>
+                        </div>
+                    )}
+
+                    {/* Mobile Menu Button */}
+                    {isSmallScreen && (
+                        <button
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="absolute right-0 text-gray-500 hover:text-black transition-colors"
+                            aria-label="Toggle menu"
+                        >
+                            <svg
+                                className="h-6 w-6"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                {isMenuOpen ? (
+                                    <path d="M6 18L18 6M6 6l12 12" />
+                                ) : (
+                                    <path d="M4 6h16M4 12h16M4 18h16" />
+                                )}
+                            </svg>
+                        </button>
+                    )}
                 </div>
 
-                {/* Centro */}
-                {
-                    isSmallScreen ?
-                        (/*  Displays pequeños */
-                            <>
-                                {/* Centro */}
-                                <div></div>
-                                {/* Lado Derecho */}
-                                <div></div>
-                            </>
-                        )
-                        :
-                        (/*  Otros displays */
-                            <>
-                                {/* Centro */}
-                                <div className="flex items-center md:gap-16 gap-4 bg-gray-200 px-8 py-4 mx-1 rounded-2xl text-gray-400 font-semibold">
-                                    <a href="#home" className="hover:text-black">Inicio</a>
-                                    <a href="#about-us" className="hover:text-black">Nosotros</a>
-                                    <a href="#how-it-works" className="hover:text-black">Cómo funciona</a>
-                                    <a href="#services" className="hover:text-black">Servicios</a>
-                                </div>
-                                {/* Lado Derecho */}
-                                <div className="relative flex items-center md:space-x-3 space-x-2">
-                                    <Link to="/register" className="text-gray-400 hover:text-black">Regístrate</Link>
-                                    <Link to="/login" className="text-white rounded-lg bg-blue py-2 px-4 hover:text-gray-400">Iniciar sesión</Link>
-                                </div>
-                            </>
-                        )
-                }
+                {/* Mobile Menu */}
+                {isSmallScreen && isMenuOpen && (
+                    <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-b-lg">
+                        <div className="flex flex-col p-4 space-y-4">
+                            {NAV_ITEMS.map((item) => (
+                                <a
+                                    key={item.label}
+                                    href={item.href}
+                                    className="text-gray-500 hover:text-black transition-colors text-center"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {item.label}
+                                </a>
+                            ))}
+                            <div className="pt-4 space-y-3 border-t">
+                                <Link 
+                                    to={ROUTES.REGISTER}
+                                    className="block text-gray-400 hover:text-black transition-colors text-center"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Regístrate
+                                </Link>
+                                <Link 
+                                    to={ROUTES.LOGIN}
+                                    className="block bg-blue text-white py-2 px-4 rounded-lg
+                                             text-center hover:bg-opacity-90 transition-all duration-300"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Iniciar sesión
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </nav>
         </header>
     );
