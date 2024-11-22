@@ -1,6 +1,6 @@
 import { createBrowserRouter , RouteObject } from 'react-router-dom';
 import App from '../App';
-import Landing from "../pages/Landing";
+import Landing from "../pages/landing/Landing";
 import Login from "../pages/Login";
 import Chat from "../pages/Chat";
 

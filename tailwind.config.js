@@ -12,8 +12,8 @@ module.exports = {
     extend: {
       colors: {
         'black': '#162D3A',
+        'landing-primary': '#F5F8FF',
         'landing-secondary':'#252432',
-        'background-landing': '#F5F8FF',
         'background-input-login': '#F7FBFF',
         'strike-input-login': '#D4D7E3',
         'blue': '#1E4AE9',
