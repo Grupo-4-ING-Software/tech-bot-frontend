@@ -26,18 +26,14 @@ const NavBar: FC = () => {
     }, []);
 
     return (
-        <header className={`fixed w-full z-50 transition-all duration-300 ${
-            isScrolled ? 'bg-white/80 backdrop-blur-sm shadow-md' : ''
-        }`}>
+        <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-sm shadow-md' : ''
+            }`}>
             <nav className="max-w-screen-2xl mx-auto px-6 py-4">
                 <div className="flex justify-center items-center relative">
                     {/* Logo (Left) */}
                     <div className="absolute left-0">
                         <Link to={ROUTES.LANDING} className="flex items-center gap-2">
-                            <div className="bg-black p-2 rounded">
-                                <img src={logo} alt="TechBot Logo" className="h-6 w-6" />
-                            </div>
-                            <span className="text-xl font-bold">TechBot</span>
+                            <img src={logo} alt="TechBot Logo" className="h-6" />
                         </Link>
                     </div>
 
@@ -62,13 +58,13 @@ const NavBar: FC = () => {
                     {/* Auth Buttons (Right) */}
                     {!isSmallScreen && (
                         <div className="absolute right-0 flex items-center gap-4">
-                            <Link 
+                            <Link
                                 to={ROUTES.REGISTER}
                                 className="text-gray-400 hover:text-black transition-colors"
                             >
                                 Regístrate
                             </Link>
-                            <Link 
+                            <Link
                                 to={ROUTES.LOGIN}
                                 className="bg-blue text-white px-6 py-2 rounded-lg
                                          hover:bg-opacity-90 transition-all duration-300"
@@ -119,14 +115,14 @@ const NavBar: FC = () => {
                                 </a>
                             ))}
                             <div className="pt-4 space-y-3 border-t">
-                                <Link 
+                                <Link
                                     to={ROUTES.REGISTER}
                                     className="block text-gray-400 hover:text-black transition-colors text-center"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Regístrate
                                 </Link>
-                                <Link 
+                                <Link
                                     to={ROUTES.LOGIN}
                                     className="block bg-blue text-white py-2 px-4 rounded-lg
                                              text-center hover:bg-opacity-90 transition-all duration-300"
