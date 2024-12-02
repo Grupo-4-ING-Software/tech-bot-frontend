@@ -10,11 +10,42 @@ import logo from '../assets/icons/logo.svg'
 const LoginForm: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(ROUTES.APP.CHAT);
+    if (!email || !password) {
+      setError('Por favor, ingresa tu correo y contraseña');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/api/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        setError('Correo electrónico o contraseña incorrectos');
+        return;
+      }
+
+      const data = await response.json();
+      localStorage.setItem('access_token', data.access_token);
+      console.log("A punto de redirigir a pagina de chat")
+      // Redirigir a la página del chat
+      navigate(ROUTES.APP.CHAT);
+    } catch (error) {
+      setError('Hubo un error al iniciar sesión');
+    }
+
   };
 
   const isSmallScreen = useSmallScreenSize();
@@ -46,6 +77,7 @@ const LoginForm: FC = () => {
             </p>
           </div>
           <form onSubmit={handleLogin} className="space-y-6">
+            {error && <p className="text-red-500">{error}</p>}
             <InputLogin
               title="Correo electrónico"
               placeholder="example@email.com"

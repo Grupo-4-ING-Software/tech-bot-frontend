@@ -10,11 +10,46 @@ import logo from '../assets/icons/logo.svg'
 const SignUp: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(ROUTES.APP.CHAT);
+
+    if (!email || !password || !confirmPassword) {
+      setError('Todos los campos son obligatorios');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.detail || 'Error al registrar el usuario');
+        return;
+      }
+
+      // Si la creación es exitosa, redirigir al login
+      navigate(ROUTES.LOGIN);
+    } catch (error) {
+      setError('Hubo un error al registrar el usuario');
+    }
   };
 
   const isSmallScreen = useSmallScreenSize();
@@ -48,6 +83,7 @@ const SignUp: FC = () => {
             </p>
           </div>
           <form onSubmit={handleLogin} className="space-y-6">
+            {error && <p className="text-red-500">{error}</p>}
             <InputLogin
               title="Correo electrónico"
               placeholder="example@email.com"
@@ -67,8 +103,8 @@ const SignUp: FC = () => {
               title="Repite tu contraseña"
               placeholder="At least 8 characters"
               type="password"
-              value={password}
-              onChange={setPassword}
+              value={confirmPassword}
+              onChange={setConfirmPassword}
             />
 
             <ButtonLogin
