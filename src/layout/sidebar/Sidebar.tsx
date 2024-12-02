@@ -35,9 +35,7 @@ const options: Option[] = [
 const Sidebar: FC = () => {
   return (
     <div className="flex flex-col justify-start items-start p-4 bg-gray-100 h-screen w-64">
-      <Link to={ROUTES.LANDING} className="font-bold text-xl mb-6">
-        <img src={logo} alt="Logo de TechBot" className="h-8"/>
-      </Link>
+      <img src={logo} alt="Logo de TechBot" className="h-8 mb-6"/>
       <div className="space-y-4">
         {options.map((option, index) => (
           <Link
