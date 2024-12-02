@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import InputLogin from '../components/login/InputLogin';
 import ButtonLogin from '../components/login/ButtonLogin';
@@ -13,6 +13,14 @@ const SignUp: FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Verifica si el usuario ya está autenticado
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      navigate(ROUTES.APP.CHAT);
+    }
+  }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
