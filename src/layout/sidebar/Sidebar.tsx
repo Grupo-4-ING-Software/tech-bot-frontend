@@ -5,6 +5,7 @@ import { LiaHistorySolid } from 'react-icons/lia';
 import { RxExit } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../shared/utils/routes';
+import {useNavigate } from 'react-router-dom';
 
 import logo from '../../assets/icons/logo.svg'
 
@@ -33,17 +34,25 @@ const options: Option[] = [
 ];
 
 const Sidebar: FC = () => {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remover token de acceso luego de cerrar sesion
+    localStorage.removeItem('access_token');
+    navigate(ROUTES.LOGIN);
+  };
+
   return (
     <div className="flex flex-col justify-start items-start p-4 bg-gray-100 h-screen w-64">
-      <Link to={ROUTES.LANDING} className="font-bold text-xl mb-6">
-        <img src={logo} alt="Logo de TechBot" className="h-8"/>
-      </Link>
+      <img src={logo} alt="Logo de TechBot" className="h-8"/>
       <div className="space-y-4">
         {options.map((option, index) => (
           <Link
             key={index}
             to={option.route}
             className="flex flex-row items-center gap-3 text-gray-700 hover:text-blue-500 cursor-pointer"
+            onClick={option.text === 'Salir' ? handleLogout : undefined}
           >
             <option.icon className="text-2xl" />
             <span className="text-lg">{option.text}</span>
