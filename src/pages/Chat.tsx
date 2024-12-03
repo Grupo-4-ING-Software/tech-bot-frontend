@@ -16,6 +16,35 @@ interface Message {
 const WELCOME_MESSAGE = '¡Hola! 👋 ¡Bienvenido a TechBoth! 🚀 Aquí te ayudaremos a descubrir el mejor camino para tu carrera profesional 💼 brindándote los recursos más valiosos 📚. Cuéntame, ¿qué línea de carrera te gustaría explorar hoy? 🎯';
 
 const Chat: FC = () => {
+
+  const navigate = useNavigate();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { generateDiagram, diagram } = useDiagram();
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem('access_token');
+      
+      if (!token) {
+        navigate(ROUTES.LOGIN);
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:8000/api/verify-token/${token}`);
+
+        if (!response.ok) {
+          throw new Error('Token verification failed');
+        }
+      } catch (error) {
+        localStorage.removeItem('access_token');
+        navigate(ROUTES.LOGIN);
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'bot',
@@ -24,9 +53,7 @@ const Chat: FC = () => {
     },
   ]);
 
-  const navigate = useNavigate();
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const { generateDiagram, diagram } = useDiagram();
+
 
   const handleSend = async (message: string) => {
     // Agregar mensaje del usuario

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import InputLogin from '../components/login/InputLogin';
 import ButtonLogin from '../components/login/ButtonLogin';
@@ -6,15 +6,85 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { ROUTES } from '../shared/utils/routes';
 import useSmallScreenSize from '../hooks/small-screen-size/useSmallScreenSize';
 import logo from '../assets/icons/logo.svg'
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const SignUp: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  const handleLogin = (e: React.FormEvent) => {
+  useEffect(() => {
+    // Verifica si el usuario ya está autenticado
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      navigate(ROUTES.APP.CHAT);
+    }
+  }, [navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(ROUTES.APP.CHAT);
+
+    if (!email || !password || !confirmPassword) {
+      setError('Todos los campos son obligatorios');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.detail || 'Error al registrar el usuario');
+        return;
+      }
+
+      // Si la creación es exitosa, redirigir al login
+      navigate(ROUTES.LOGIN);
+    } catch (error) {
+      setError('Hubo un error al registrar el usuario');
+    }
+  };
+
+  const handleGoogleRegister = async (response: any) => {
+    const googleToken = response.credential;
+
+    try {
+      const res = await fetch('http://localhost:8000/api/register/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: googleToken }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('access_token', data.access_token);
+        navigate(ROUTES.APP.CHAT);
+      } else {
+        const errorData = await res.json();
+        setError(errorData.detail || 'Error desconocido'); 
+      }
+    } catch (error) {
+      setError('Hubo un error al registrarse con Google');
+    }
   };
 
   const isSmallScreen = useSmallScreenSize();
@@ -48,6 +118,7 @@ const SignUp: FC = () => {
             </p>
           </div>
           <form onSubmit={handleLogin} className="space-y-6">
+            {error && <p className="text-red-500">{error}</p>}
             <InputLogin
               title="Correo electrónico"
               placeholder="example@email.com"
@@ -67,8 +138,8 @@ const SignUp: FC = () => {
               title="Repite tu contraseña"
               placeholder="At least 8 characters"
               type="password"
-              value={password}
-              onChange={setPassword}
+              value={confirmPassword}
+              onChange={setConfirmPassword}
             />
 
             <ButtonLogin
@@ -86,16 +157,14 @@ const SignUp: FC = () => {
               <hr className="w-1/3 border-gray-300" />
             </div>
 
-            <ButtonLogin
-              text="Sign up with Google"
-              onClick={() => console.log('registro con Google')}
-              bgColor="bg-background-input-login"
-              textColor="text-gray-700"
-              borderColor="none"
-              className="text-base py-3"
-              iconSrc="/assets/icons/google-color-svgrepo-com.svg"
-              iconAlt="Google Logo"
-            />
+                <GoogleOAuthProvider clientId={clientId}>
+                  <GoogleLogin
+                    onSuccess={handleGoogleRegister}
+                    onError={() => console.log('Register Failed')}
+                    text="signup_with"
+                  />
+                </GoogleOAuthProvider>
+
           </div>
           <div className="text-center mt-6">
             <p className="text-base">

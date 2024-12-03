@@ -1,20 +1,87 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import InputLogin from '../components/login/InputLogin';
 import ButtonLogin from '../components/login/ButtonLogin';
 import { FiArrowLeft } from 'react-icons/fi';
 import { ROUTES } from '../shared/utils/routes';
 import useSmallScreenSize from '../hooks/small-screen-size/useSmallScreenSize'
-import logo from '../assets/icons/logo.svg'
+import logo from '../assets/icons/logo.svg';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  const handleLogin = (e: React.FormEvent) => {
+  useEffect(() => {
+    // Verifica si el usuario ya está autenticado
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      navigate(ROUTES.APP.CHAT);
+    }
+  }, [navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(ROUTES.APP.CHAT);
+    if (!email || !password) {
+      setError('Por favor, ingresa tu correo y contraseña');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/api/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        setError('Correo electrónico o contraseña incorrectos');
+        return;
+      }
+
+      const data = await response.json();
+      localStorage.setItem('access_token', data.access_token);
+      console.log("A punto de redirigir a pagina de chat")
+      // Redirigir a la página del chat
+      navigate(ROUTES.APP.CHAT);
+    } catch (error) {
+      setError('Hubo un error al iniciar sesión');
+    }
+
+  };
+
+  const handleGoogleLogin = async (response: any) => {
+    try {
+      const googleToken = response.credential;
+      console.log(googleToken)
+      console.log(JSON.stringify({ token: googleToken }))
+
+      const res = await fetch('http://localhost:8000/api/login/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: googleToken }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('access_token', data.access_token);
+        navigate(ROUTES.APP.CHAT);
+      } else {
+        setError('Error al iniciar sesión con Google');
+      }
+    } catch (error) {
+      setError('Hubo un error al iniciar sesión con Google');
+    }
   };
 
   const isSmallScreen = useSmallScreenSize();
@@ -46,6 +113,7 @@ const LoginForm: FC = () => {
             </p>
           </div>
           <form onSubmit={handleLogin} className="space-y-6">
+            {error && <p className="text-red-500">{error}</p>}
             <InputLogin
               title="Correo electrónico"
               placeholder="example@email.com"
@@ -88,17 +156,13 @@ const LoginForm: FC = () => {
               <hr className="w-1/3 border-gray-300" />
             </div>
 
-            <Link to="/app">
-              <ButtonLogin
-                text="Sign in with Google"
-                onClick={() => console.log('Iniciar sesión con Google')}
-                bgColor="bg-background-input-login"
-                textColor="text-gray-700"
-                borderColor="none"
-                className="text-base py-3"
-                iconSrc="/assets/icons/google-color-svgrepo-com.svg"
-                iconAlt="Google Logo"
-              />
+            <Link to={ROUTES.APP.CHAT}>
+                <GoogleOAuthProvider clientId={clientId}>
+                  <GoogleLogin
+                    onSuccess={handleGoogleLogin}
+                    onError={() => console.log('Login Failed')}
+                  />
+                </GoogleOAuthProvider>
             </Link>
           </div>
           <div className="text-center mt-6">
