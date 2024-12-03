@@ -28,8 +28,6 @@ const Chat: FC = () => {
       if (!token) {
         navigate(ROUTES.LOGIN);
         return;
-      }else{
-        console.log(token)
       }
 
       try {

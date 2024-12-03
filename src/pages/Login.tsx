@@ -5,13 +5,15 @@ import ButtonLogin from '../components/login/ButtonLogin';
 import { FiArrowLeft } from 'react-icons/fi';
 import { ROUTES } from '../shared/utils/routes';
 import useSmallScreenSize from '../hooks/small-screen-size/useSmallScreenSize'
-import logo from '../assets/icons/logo.svg'
+import logo from '../assets/icons/logo.svg';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   useEffect(() => {
     // Verifica si el usuario ya está autenticado
@@ -54,6 +56,32 @@ const LoginForm: FC = () => {
       setError('Hubo un error al iniciar sesión');
     }
 
+  };
+
+  const handleGoogleLogin = async (response: any) => {
+    try {
+      const googleToken = response.credential;
+      console.log(googleToken)
+      console.log(JSON.stringify({ token: googleToken }))
+
+      const res = await fetch('http://localhost:8000/api/login/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: googleToken }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('access_token', data.access_token);
+        navigate(ROUTES.APP.CHAT);
+      } else {
+        setError('Error al iniciar sesión con Google');
+      }
+    } catch (error) {
+      setError('Hubo un error al iniciar sesión con Google');
+    }
   };
 
   const isSmallScreen = useSmallScreenSize();
@@ -128,17 +156,13 @@ const LoginForm: FC = () => {
               <hr className="w-1/3 border-gray-300" />
             </div>
 
-            <Link to="/app">
-              <ButtonLogin
-                text="Sign in with Google"
-                onClick={() => console.log('Iniciar sesión con Google')}
-                bgColor="bg-background-input-login"
-                textColor="text-gray-700"
-                borderColor="none"
-                className="text-base py-3"
-                iconSrc="/assets/icons/google-color-svgrepo-com.svg"
-                iconAlt="Google Logo"
-              />
+            <Link to={ROUTES.APP.CHAT}>
+                <GoogleOAuthProvider clientId={clientId}>
+                  <GoogleLogin
+                    onSuccess={handleGoogleLogin}
+                    onError={() => console.log('Login Failed')}
+                  />
+                </GoogleOAuthProvider>
             </Link>
           </div>
           <div className="text-center mt-6">
