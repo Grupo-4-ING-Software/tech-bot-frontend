@@ -2,8 +2,6 @@ import { FC, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../shared/utils/routes';
 import useSmallScreenSize from '../../hooks/small-screen-size/useSmallScreenSize';
-import logo from '../../assets/icons/logo.svg';
-
 const NAV_ITEMS = [
     { label: 'Inicio', href: '#home' },
     { label: 'Nosotros', href: '#about-us' },
@@ -33,7 +31,15 @@ const NavBar: FC = () => {
                     {/* Logo (Left) */}
                     <div className="absolute left-0">
                         <Link to={ROUTES.LANDING} className="flex items-center gap-2">
-                            <img src={logo} alt="TechBot Logo" className="h-6" />
+                        <div className="flex items-center gap-2">
+                        <div className="bg-black p-2 rounded">
+                            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <span className="text-xl font-bold">TechBot</span>
+                    </div>
+
                         </Link>
                     </div>
 

@@ -54,7 +54,7 @@ const DiagramContext = createContext<DiagramContextType | undefined>(undefined);
 export function DiagramProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(diagramReducer, initialState);
 
-  const generateDiagram = async (prompt: string) => {
+  const generateDiagram = async (prompt: string): Promise<void> => {
     try {
       dispatch({ type: 'SET_LOADING' });
       const response = await DiagramService.getInstance().generateDiagram(prompt);

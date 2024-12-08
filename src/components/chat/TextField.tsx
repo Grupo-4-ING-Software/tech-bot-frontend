@@ -4,6 +4,7 @@ import { LuSendHorizonal } from 'react-icons/lu';
 interface TextFieldProps {
   placeholder: string;
   onSend: (message: string) => void;
+  disabled?: boolean;
 }
 
 const TextField: FC<TextFieldProps> = ({ placeholder, onSend }) => {
