@@ -1,8 +1,8 @@
-import { DiagramRequest, DiagramResponse } from '../../types/diagram';
+import { axiosInstance } from './axiosInstance';
+import {  DiagramResponse } from '../../types/diagram';
 
 export class DiagramService {
   private static instance: DiagramService;
-  private baseUrl: string = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
   private constructor() {}
 
@@ -15,23 +15,32 @@ export class DiagramService {
 
   async generateDiagram(prompt: string): Promise<DiagramResponse> {
     try {
-      const request: DiagramRequest = { prompt };
-      const response = await fetch(`${this.baseUrl}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(request),
+      const response = await axiosInstance.post('/chat', {
+        prompt: prompt
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate diagram');
+      // El backend devuelve { data: { data: DiagramNode } }
+      if (!response.data || !response.data.data) {
+        throw new Error('Respuesta inválida del servidor');
       }
 
-      return await response.json();
+      // Extraer el diagrama de la respuesta anidada
+      return {
+        message: null,
+        data: response.data.data
+      };
     } catch (error) {
       console.error('Error generating diagram:', error);
-      throw error;
+      return {
+        message: 'Error',
+        data: {
+          id: 'error',
+          title: 'Error',
+          description: 'No se pudo generar el diagrama',
+          resources: [],
+          children: []
+        }
+      };
     }
   }
 } 

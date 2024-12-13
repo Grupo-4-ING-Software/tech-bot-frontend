@@ -45,7 +45,8 @@ function diagramReducer(state: DiagramState, action: DiagramAction): DiagramStat
 
 // Contexto
 interface DiagramContextType extends DiagramState {
-  generateDiagram: (prompt: string) => Promise<void>;
+  generateDiagram: (prompt: string) => Promise<DiagramNode | null>;
+  dispatch: React.Dispatch<DiagramAction>;
 }
 
 const DiagramContext = createContext<DiagramContextType | undefined>(undefined);
@@ -54,19 +55,35 @@ const DiagramContext = createContext<DiagramContextType | undefined>(undefined);
 export function DiagramProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(diagramReducer, initialState);
 
-  const generateDiagram = async (prompt: string): Promise<void> => {
+  const generateDiagram = async (prompt: string) => {
     try {
       dispatch({ type: 'SET_LOADING' });
       const response = await DiagramService.getInstance().generateDiagram(prompt);
+      
+      if (!response || !response.data) {
+        throw new Error('Respuesta inválida del servidor');
+      }
+
       dispatch({ type: 'SET_DIAGRAM', payload: response.data });
+      return response;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      dispatch({ type: 'SET_ERROR', payload: `Error al generar el diagrama: ${errorMessage}` });
+      dispatch({ type: 'SET_ERROR', payload: errorMessage });
+      return {
+        message: 'Error',
+        data: {
+          id: 'error',
+          title: 'Error',
+          description: 'No se pudo generar el diagrama',
+          resources: [],
+          children: []
+        }
+      };
     }
   };
 
   return (
-    <DiagramContext.Provider value={{ ...state, generateDiagram }}>
+    <DiagramContext.Provider value={{ ...state, generateDiagram, dispatch }}>
       {children}
     </DiagramContext.Provider>
   );

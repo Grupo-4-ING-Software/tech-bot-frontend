@@ -7,6 +7,13 @@ import { ROUTES } from '../shared/utils/routes';
 import useSmallScreenSize from '../hooks/small-screen-size/useSmallScreenSize'
 import logo from '../assets/icons/logo.svg';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { authService } from '../services/api/authService';
+
+interface GoogleOAuthResponse {
+  credential: string;
+  clientId?: string;
+  select_by?: string;
+}
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState('');
@@ -31,55 +38,20 @@ const LoginForm: FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          username: email,
-          password: password,
-        }),
-      });
-
-      if (!response.ok) {
-        setError('Correo electrónico o contraseña incorrectos');
-        return;
-      }
-
-      const data = await response.json();
-      localStorage.setItem('access_token', data.access_token);
-      console.log("A punto de redirigir a pagina de chat")
-      // Redirigir a la página del chat
+      await authService.login(email, password);
       navigate(ROUTES.APP.CHAT);
-    } catch (error) {
-      setError('Hubo un error al iniciar sesión');
+    } catch {
+      setError('Correo electrónico o contraseña incorrectos');
     }
-
   };
 
-  const handleGoogleLogin = async (response: any) => {
+  const handleGoogleLogin = async (response: GoogleOAuthResponse) => {
     try {
       const googleToken = response.credential;
-      console.log(googleToken)
-      console.log(JSON.stringify({ token: googleToken }))
-
-      const res = await fetch('http://localhost:8000/api/login/google', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: googleToken }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem('access_token', data.access_token);
-        navigate(ROUTES.APP.CHAT);
-      } else {
-        setError('Error al iniciar sesión con Google');
-      }
+      await authService.googleLogin(googleToken);
+      navigate(ROUTES.APP.CHAT);
     } catch (error) {
+      console.error('Login error:', error);
       setError('Hubo un error al iniciar sesión con Google');
     }
   };

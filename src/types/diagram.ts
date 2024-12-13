@@ -12,22 +12,11 @@ export interface DiagramNode {
   children?: DiagramNode[] | null;
 }
 
-export interface DiagramResponse {
-  message: string | null;
-  data: DiagramNode;
-}
-
 export interface DiagramRequest {
   prompt: string;
 }
 
-export interface ErrorDiagram extends DiagramNode {
-  id: 'error';
-  description: string;
-  resources: [];
-  children: [];
-}
-
-export function isErrorDiagram(diagram: DiagramNode): diagram is ErrorDiagram {
-  return diagram.id === 'error';
+export interface DiagramResponse {
+  message: string | null;
+  data: DiagramNode;
 } 
