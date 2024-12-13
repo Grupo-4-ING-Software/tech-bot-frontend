@@ -36,7 +36,7 @@ const Chat: FC = () => {
         if (!response.ok) {
           throw new Error('Token verification failed');
         }
-      } catch (error) {
+      } catch {
         localStorage.removeItem('access_token');
         navigate(ROUTES.LOGIN);
       }
@@ -56,58 +56,55 @@ const Chat: FC = () => {
 
 
   const handleSend = async (message: string) => {
-    // Agregar mensaje del usuario
-    setMessages(prev => [...prev, { sender: 'user', text: message, type: 'text' }]);
-
     try {
-      // Mensaje de "pensando"
+      setMessages(prev => [...prev, { sender: 'user', text: message, type: 'text' }]);
+
       setMessages(prev => [
         ...prev,
         { sender: 'bot', text: '🤔 Déjame analizar tu solicitud...', type: 'text' },
       ]);
 
-      // Generar diagrama y esperar la respuesta
-      await generateDiagram(message);
+      const response = await generateDiagram(message);
+      
+      // Verificar que tenemos una respuesta válida
+      if (!response || !response.data) {
+        throw new Error('Respuesta inválida del servidor');
+      }
 
-      // Remover mensaje de "pensando"
+      const diagramData = response.data;
+
       setMessages(prev => {
         const updatedMessages = prev.slice(0, -1);
-
-        if (diagram?.id === 'error') {
-          // Si es un error, mostrar mensaje amigable y reiniciar la conversación
+        
+        if (!diagramData || diagramData.id === 'error') {
           return [
             ...updatedMessages,
             {
               sender: 'bot',
-              text: '¡Hey! 👋 Me especializo en ayudarte a encontrar el camino en carreras tecnológicas. ¿Podrías intentar con alguna de estas opciones?\n\n• Desarrollador Frontend\n• Desarrollador Backend\n• Ingeniero DevOps\n• Científico de Datos\n• Arquitecto Cloud\n• Ingeniero de Software\n\n¡Intentémoslo de nuevo! 😊',
+              text: 'Lo siento, hubo un problema al generar tu ruta. ¿Podrías intentarlo de nuevo?',
               type: 'text',
-            },
-            {
-              sender: 'bot',
-              text: WELCOME_MESSAGE,
-              type: 'text',
-            },
-          ];
-        } else {
-          // Si es exitoso, mostrar mensaje con botón
-          return [
-            ...updatedMessages,
-            {
-              sender: 'bot',
-              text: '¡Excelente elección! 🎯 He preparado una ruta de aprendizaje personalizada para ti. Presiona el botón para ver tu diagrama detallado. ¡Comencemos esta emocionante aventura! 🚀',
-              type: 'button',
             },
           ];
         }
+
+        return [
+          ...updatedMessages,
+          {
+            sender: 'bot',
+            text: `¡He creado una ruta de aprendizaje personalizada para ${diagramData.title}! 🎯\n\n${diagramData.description}\n\nHaz clic en el botón para ver el diagrama completo.`,
+            type: 'button',
+          },
+        ];
       });
-    } catch {
+    } catch (error) {
+      console.error('Chat error:', error);
       setMessages(prev => {
         const updatedMessages = prev.slice(0, -1);
         return [
           ...updatedMessages,
           {
             sender: 'bot',
-            text: 'Ups, parece que hubo un pequeño problema técnico 😅. ¿Podrías intentarlo de nuevo?',
+            text: 'Ups, parece que hubo un problema técnico 😅. ¿Podrías intentarlo de nuevo?',
             type: 'text',
           },
         ];
