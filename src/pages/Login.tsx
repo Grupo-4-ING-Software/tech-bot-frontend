@@ -87,16 +87,16 @@ const LoginForm: FC = () => {
   const isSmallScreen = useSmallScreenSize();
 
   return (
-    <div className="flex flex-row h-screen overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen">
       {/* User Login */}
-      <div className="flex-col w-full md:w-1/2 flex items-center justify-center m-16 mt-0 -translate-y-9 md:translate-y-0" >
+      <div className="flex-col w-full md:w-1/2 flex items-center justify-center md:m-16 pt-32 px-8 md:px-16 -translate-y-9 md:translate-y-0" >
         <div className="h-6 -translate-y-6 md:-translate-y-2 ">
           <Link to={ROUTES.LANDING}>
-          <img src={logo} alt="Logo de TechBot" />
+            <img src={logo} alt="Logo de TechBot" />
           </Link>
         </div>
         {/* Go Back Button */}
-        <div className="self-start ml-8 translate-y-12 border rounded-full bg-white p-2 shadow-md hover:bg-gray-50 -translate-x-10 md:translate-x-0">
+        <div className="self-start ml-8 translate-y-12 border rounded-full bg-white p-2 shadow-md hover:bg-gray-50 -translate-x-10 md:-translate-x-8">
           <Link to={ROUTES.LANDING}>
             <FiArrowLeft className="text-blue-500 text-3xl cursor-pointer" />
           </Link>
@@ -105,7 +105,7 @@ const LoginForm: FC = () => {
         {/* User Login Data */}
         <article className="max-w-md w-3/4">
           <div className="flex flex-col mb-10 text-left gap-7">
-            <h1 className="text-4xl font-bold leading-tight w-screen">
+            <h1 className="text-4xl font-bold leading-tight w-full">
               Bienvenido de nuevo  👋
             </h1>
             <p className="text-gray-500 text-base leading-relaxed">
@@ -157,12 +157,12 @@ const LoginForm: FC = () => {
             </div>
 
             <Link to={ROUTES.APP.CHAT}>
-                <GoogleOAuthProvider clientId={clientId}>
-                  <GoogleLogin
-                    onSuccess={handleGoogleLogin}
-                    onError={() => console.log('Login Failed')}
-                  />
-                </GoogleOAuthProvider>
+              <GoogleOAuthProvider clientId={clientId}>
+                <GoogleLogin
+                  onSuccess={handleGoogleLogin}
+                  onError={() => console.log('Login Failed')}
+                />
+              </GoogleOAuthProvider>
             </Link>
           </div>
           <div className="text-center mt-6">

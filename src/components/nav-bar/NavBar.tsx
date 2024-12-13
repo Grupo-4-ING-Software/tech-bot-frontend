@@ -33,7 +33,7 @@ const NavBar: FC = () => {
                         <Link to={ROUTES.LANDING} className="flex items-center gap-2">
                         <div className="flex items-center gap-2">
                         <div className="bg-black p-2 rounded">
-                            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <svg className=" size-2 md:size-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
                             </svg>
                         </div>

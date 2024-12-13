@@ -80,7 +80,7 @@ const SignUp: FC = () => {
         navigate(ROUTES.APP.CHAT);
       } else {
         const errorData = await res.json();
-        setError(errorData.detail || 'Error desconocido'); 
+        setError(errorData.detail || 'Error desconocido');
       }
     } catch (error) {
       setError('Hubo un error al registrarse con Google');
@@ -89,9 +89,9 @@ const SignUp: FC = () => {
 
   const isSmallScreen = useSmallScreenSize();
   return (
-    <div className="flex flex-row h-screen overflow-hidden pb-14">
+    <div className="flex flex-col md:flex-row h-screen pb-14">
       {/* User Register */}
-      <div className="flex-col w-full md:w-1/2 flex items-center justify-center m-16 mt-0">
+      <div className="flex-col w-full md:w-1/2 flex items-center justify-center md:m-16 md:pt-32 px-8 md:px-16 -translate-y-9 md:translate-y-0">
 
         {/* Logo */}
         <div className="h-6 -translate-y-19 md:-translate-y-0 my-8 pt-4 md:pt-20">
@@ -101,7 +101,7 @@ const SignUp: FC = () => {
         </div>
 
         {/* Go Back Button */}
-        <div className="self-start ml-8 translate-y-12 border rounded-full bg-white p-2 shadow-md hover:bg-gray-50 -translate-x-10 md:translate-x-0">
+        <div className="self-start ml-8 translate-y-12 border rounded-full bg-white p-2 shadow-md hover:bg-gray-50 -translate-x-10 md:-translate-x-8">
           <Link to={ROUTES.LANDING}>
             <FiArrowLeft className="text-blue-500 text-3xl cursor-pointer" />
           </Link>
@@ -157,13 +157,13 @@ const SignUp: FC = () => {
               <hr className="w-1/3 border-gray-300" />
             </div>
 
-                <GoogleOAuthProvider clientId={clientId}>
-                  <GoogleLogin
-                    onSuccess={handleGoogleRegister}
-                    onError={() => console.log('Register Failed')}
-                    text="signup_with"
-                  />
-                </GoogleOAuthProvider>
+            <GoogleOAuthProvider clientId={clientId}>
+              <GoogleLogin
+                onSuccess={handleGoogleRegister}
+                onError={() => console.log('Register Failed')}
+                text="signup_with"
+              />
+            </GoogleOAuthProvider>
 
           </div>
           <div className="text-center mt-6">

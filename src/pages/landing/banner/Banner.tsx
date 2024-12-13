@@ -13,7 +13,7 @@ const Banner: FC = () => {
             <p className="text-xl md:text-2xl mb-10 max-w-2xl text-gray-600 animate-fade-in-delay">
                 Descubre el camino perfecto para tu carrera en tecnología con ayuda de la IA
             </p>
-            <Link 
+            <Link
                 to={ROUTES.LOGIN}
                 className="bg-black text-white font-bold py-4 px-10 rounded-xl
                          hover:bg-opacity-90 transition-all duration-300 transform

@@ -4,6 +4,8 @@ import router from "./routers/router";
 import { DiagramProvider } from './context/DiagramContext';
 
 const App: React.FC = () => {
+    
+
     return <DiagramProvider>
         <RouterProvider router={router} />
     </DiagramProvider>;
