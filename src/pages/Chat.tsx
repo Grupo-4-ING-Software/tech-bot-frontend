@@ -67,11 +67,11 @@ const Chat: FC = () => {
       const response = await generateDiagram(message);
       
       // Verificar que tenemos una respuesta válida
-      if (!response || !response.data) {
+      if (!response || !response.id) {
         throw new Error('Respuesta inválida del servidor');
       }
 
-      const diagramData = response.data;
+      const diagramData = response;
 
       setMessages(prev => {
         const updatedMessages = prev.slice(0, -1);
@@ -131,7 +131,7 @@ const Chat: FC = () => {
       <div className="flex flex-col w-3/4 gap-3 justify-between h-full">
         <div className="flex justify-center items-center">
           <h1 className="text-3xl font-semibold bg-gradient-to-r from-lavanda to-pink text-transparent bg-clip-text">
-            ¿Qué nueva ruta quieres aprender, Melissa?
+            ¿Qué nueva ruta quieres aprender?
           </h1>
         </div>
    
