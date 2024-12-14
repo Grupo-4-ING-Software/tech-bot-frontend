@@ -129,9 +129,17 @@ const ChatHistory: FC = () => {
   };
 
   const handleCardClick = (chat: ChatHistoryType) => {
+    const validatedData = {
+      ...chat.response.data,
+      resources: chat.response.data.resources.map(resource => ({
+        ...resource,
+        type: resource.type as "article" | "video" | "course"
+      }))
+    };
+    
     dispatch({ 
       type: 'SET_DIAGRAM', 
-      payload: chat.response.data 
+      payload: validatedData 
     });
     navigate(ROUTES.APP.DIAGRAM);
   };
