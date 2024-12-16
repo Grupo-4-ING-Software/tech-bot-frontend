@@ -6,6 +6,7 @@ import TextField from '../components/chat/TextField';
 import CardWithButton from '../components/chat/CardWithButton';
 import { ROUTES } from '../shared/utils/routes';
 import { useDiagram } from '../context/DiagramContext';
+import { IoMdClose } from "react-icons/io";
 
 interface Message {
   sender: 'bot' | 'user';
@@ -24,9 +25,9 @@ const Chat: FC = () => {
   useEffect(() => {
     const verifyToken = async () => {
       const token = localStorage.getItem('access_token');
-      
+
       if (!token) {
-        navigate(ROUTES.LOGIN);
+        navigate(ROUTES.APP.CHAT);
         return;
       }
 
@@ -65,7 +66,7 @@ const Chat: FC = () => {
       ]);
 
       const response = await generateDiagram(message);
-      
+
       // Verificar que tenemos una respuesta válida
       if (!response || !response.id) {
         throw new Error('Respuesta inválida del servidor');
@@ -75,7 +76,7 @@ const Chat: FC = () => {
 
       setMessages(prev => {
         const updatedMessages = prev.slice(0, -1);
-        
+
         if (!diagramData || diagramData.id === 'error') {
           return [
             ...updatedMessages,
@@ -126,6 +127,8 @@ const Chat: FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div className="flex flex-col w-full p-8 justify-center items-center gap-3">
       <div className="flex flex-col w-3/4 gap-3 justify-between h-full">
@@ -134,7 +137,7 @@ const Chat: FC = () => {
             ¿Qué nueva ruta quieres aprender?
           </h1>
         </div>
-   
+
         <article className="flex flex-col bg-gray-ligth w-full h-3/4 rounded-3xl p-5 gap-4 overflow-y-auto">
           {messages.map((message, index) => (
             <div
@@ -144,9 +147,9 @@ const Chat: FC = () => {
               {message.sender === 'bot' && message.type === 'text' ? (
                 <CardTextChatbot text={message.text} />
               ) : message.sender === 'bot' && message.type === 'button' ? (
-                <CardWithButton 
-                  text={message.text} 
-                  buttonText="¡Ver mi ruta! 🗺️" 
+                <CardWithButton
+                  text={message.text}
+                  buttonText="¡Ver mi ruta! 🗺️"
                   buttonRoute={ROUTES.APP.DIAGRAM}
                   onButtonClick={handleDiagramClick}
                 />
@@ -158,10 +161,10 @@ const Chat: FC = () => {
 
           <div ref={messagesEndRef} />
         </article>
-        
+
         <TextField
           placeholder="Escribe tu mensaje..."
-          onSend={handleSend} 
+          onSend={handleSend}
         />
       </div>
     </div>
